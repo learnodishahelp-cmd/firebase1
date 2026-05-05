@@ -2,6 +2,11 @@
 <html>
 <head>
   <title>Past Tense Quiz</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .question { font-size: 18px; margin-bottom: 10px; }
+    button { padding: 8px 15px; margin-top: 10px; }
+  </style>
 </head>
 <body>
 
@@ -10,7 +15,7 @@
 <input id="username" placeholder="Enter your name"><br><br>
 
 <div id="quiz">
-  <div id="question"></div>
+  <div id="question" class="question"></div>
   <div id="options"></div>
   <button onclick="next()">Next</button>
 </div>
@@ -22,36 +27,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getDatabase, ref, push, set } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 🔴 Your Firebase config
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// 🔴 PASTE YOUR CONFIG HERE
 const firebaseConfig = {
   apiKey: "AIzaSyBFsiY4iOZ9-QKnZ_inrudYTAJ0F_Usht0",
   authDomain: "manoj-demo-4d34f.firebaseapp.com",
   databaseURL: "https://manoj-demo-4d34f-default-rtdb.firebaseio.com",
-  projectId: "manoj-demo-4d34f",
-  storageBucket: "manoj-demo-4d34f.firebasestorage.app",
-  messagingSenderId: "128319620832",
-  appId: "1:128319620832:web:b339d00391c9bee3a63285"
+  projectId: "manoj-demo-4d34f"
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-//const firebaseConfig = {
-  //apiKey: "YOUR_KEY",
- // authDomain: "YOUR_DOMAIN",
-  //databaseURL: "YOUR_DB_URL",
-  //projectId: "YOUR_ID"
-//};
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Quiz questions
+// QUESTIONS
 const questions = [
 {q:"She ___ to school yesterday.",o:["go","went","gone","going"],a:"went"},
 {q:"They ___ a movie last night.",o:["watch","watched","watching","watches"],a:"watched"},
@@ -70,7 +57,7 @@ let score = 0;
 
 function load(){
   let q = questions[current];
-  question.innerText = (current+1)+". "+q.q;
+  document.getElementById("question").innerText = (current+1)+". "+q.q;
 
   let html = "";
   q.o.forEach(opt=>{
@@ -78,7 +65,7 @@ function load(){
       <input type="radio" name="opt" value="${opt}"> ${opt}
     </label><br>`;
   });
-  options.innerHTML = html;
+  document.getElementById("options").innerHTML = html;
 }
 
 window.next = function(){
@@ -99,12 +86,13 @@ window.next = function(){
 };
 
 function finish(){
-  quiz.style.display = "none";
-  result.innerText = "Score: "+score;
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("result").innerText =
+    "Your Score: "+score+" / "+questions.length;
 
-  const name = document.getElementById("username").value;
+  const name = document.getElementById("username").value || "Anonymous";
 
-  // 🔥 Save to Firebase
+  // SAVE RESULT TO FIREBASE
   const newRef = push(ref(db, "results"));
   set(newRef, {
     name: name,
