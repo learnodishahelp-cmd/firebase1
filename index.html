@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Past Tense Quiz</title>
+</head>
+<body>
+
+<h2>Past Tense Quiz</h2>
+
+<input id="username" placeholder="Enter your name"><br><br>
+
+<div id="quiz">
+  <div id="question"></div>
+  <div id="options"></div>
+  <button onclick="next()">Next</button>
+</div>
+
+<h3 id="result"></h3>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, set } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// 🔴 Your Firebase config
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBFsiY4iOZ9-QKnZ_inrudYTAJ0F_Usht0",
+  authDomain: "manoj-demo-4d34f.firebaseapp.com",
+  databaseURL: "https://manoj-demo-4d34f-default-rtdb.firebaseio.com",
+  projectId: "manoj-demo-4d34f",
+  storageBucket: "manoj-demo-4d34f.firebasestorage.app",
+  messagingSenderId: "128319620832",
+  appId: "1:128319620832:web:b339d00391c9bee3a63285"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+//const firebaseConfig = {
+  //apiKey: "YOUR_KEY",
+ // authDomain: "YOUR_DOMAIN",
+  //databaseURL: "YOUR_DB_URL",
+  //projectId: "YOUR_ID"
+//};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Quiz questions
+const questions = [
+{q:"She ___ to school yesterday.",o:["go","went","gone","going"],a:"went"},
+{q:"They ___ a movie last night.",o:["watch","watched","watching","watches"],a:"watched"},
+{q:"I ___ my homework.",o:["finish","finished","finishing","finishes"],a:"finished"},
+{q:"He ___ the door.",o:["open","opened","opening","opens"],a:"opened"},
+{q:"We ___ football yesterday.",o:["play","played","playing","plays"],a:"played"},
+{q:"She ___ very happy.",o:["is","was","are","were"],a:"was"},
+{q:"They ___ late.",o:["is","was","were","are"],a:"were"},
+{q:"I ___ him yesterday.",o:["see","saw","seen","seeing"],a:"saw"},
+{q:"He ___ a letter.",o:["write","wrote","written","writing"],a:"wrote"},
+{q:"We ___ dinner at 8 PM.",o:["have","had","having","has"],a:"had"}
+];
+
+let current = 0;
+let score = 0;
+
+function load(){
+  let q = questions[current];
+  question.innerText = (current+1)+". "+q.q;
+
+  let html = "";
+  q.o.forEach(opt=>{
+    html += `<label>
+      <input type="radio" name="opt" value="${opt}"> ${opt}
+    </label><br>`;
+  });
+  options.innerHTML = html;
+}
+
+window.next = function(){
+  let selected = document.querySelector('input[name="opt"]:checked');
+  if(!selected){ alert("Select answer"); return; }
+
+  if(selected.value === questions[current].a){
+    score++;
+  }
+
+  current++;
+
+  if(current < questions.length){
+    load();
+  } else {
+    finish();
+  }
+};
+
+function finish(){
+  quiz.style.display = "none";
+  result.innerText = "Score: "+score;
+
+  const name = document.getElementById("username").value;
+
+  // 🔥 Save to Firebase
+  const newRef = push(ref(db, "results"));
+  set(newRef, {
+    name: name,
+    score: score,
+    total: questions.length,
+    time: Date.now()
+  });
+}
+
+load();
+</script>
+
+</body>
+</html>
