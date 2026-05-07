@@ -5,12 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SSC English Grammar Quiz</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
-
-    <!-- Firebase SDKs (compat for easy namespaced usage) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -23,1706 +19,1172 @@
             --danger-light: #fee2e2;
             --warning: #f59e0b;
             --warning-light: #fef3c7;
-            --bg: #f0f4f8;
+            --info: #3b82f6;
+            --info-light: #eff6ff;
             --card: #ffffff;
             --text: #1e293b;
             --text-light: #64748b;
             --text-muted: #94a3b8;
             --border: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
             --radius-sm: 10px;
             --radius: 16px;
             --radius-lg: 20px;
             --radius-xl: 24px;
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
             --font: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 16px;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: var(--font);
             background: linear-gradient(135deg, #e8ecf4 0%, #dce3f0 25%, #eef1f8 50%, #e4e9f5 75%, #f0f4f8 100%);
             background-attachment: fixed;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            color: var(--text);
+            min-height: 100vh; min-height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px; color: var(--text);
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            position: relative;
-            overflow-x: hidden;
+            position: relative; overflow-x: hidden;
         }
 
-        /* Animated background orbs */
-        body::before,
-        body::after {
-            content: '';
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            pointer-events: none;
-            z-index: 0;
-            animation: floatOrb 20s ease-in-out infinite;
+        body::before, body::after {
+            content: ''; position: fixed; border-radius: 50%;
+            filter: blur(80px); opacity: 0.35; pointer-events: none;
+            z-index: 0; animation: floatOrb 20s ease-in-out infinite;
         }
-        body::before {
-            width: 350px;
-            height: 350px;
-            background: #c4b5fd;
-            top: -80px;
-            left: -100px;
-        }
-        body::after {
-            width: 300px;
-            height: 300px;
-            background: #a5d8ff;
-            bottom: -90px;
-            right: -80px;
-            animation-delay: -10s;
-        }
+        body::before { width: 350px; height: 350px; background: #c4b5fd; top: -80px; left: -100px; }
+        body::after  { width: 300px; height: 300px; background: #a5d8ff; bottom: -90px; right: -80px; animation-delay: -10s; }
+
         @keyframes floatOrb {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(30px, -40px) scale(1.1);
-            }
-            50% {
-                transform: translate(-20px, 25px) scale(0.9);
-            }
-            75% {
-                transform: translate(-35px, -20px) scale(1.05);
-            }
+            0%,100% { transform: translate(0,0) scale(1); }
+            25%     { transform: translate(30px,-40px) scale(1.1); }
+            50%     { transform: translate(-20px,25px) scale(0.9); }
+            75%     { transform: translate(-35px,-20px) scale(1.05); }
         }
 
-        /* App Container */
         .app-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 540px;
-            background: var(--card);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            transition: all var(--transition);
-            min-height: 520px;
-            display: flex;
-            flex-direction: column;
+            position: relative; z-index: 1;
+            width: 100%; max-width: 560px;
+            background: var(--card); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg); overflow: hidden;
+            min-height: 520px; display: flex; flex-direction: column;
         }
 
-        /* Screen management */
         .screen {
-            display: none;
-            flex-direction: column;
-            flex: 1;
+            display: none; flex-direction: column; flex: 1;
             padding: 28px 24px 24px;
             animation: fadeSlideIn 0.4s ease-out;
         }
-        .screen.active {
-            display: flex;
-        }
+        .screen.active { display: flex; }
+
         @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ============ START SCREEN ============ */
-        .start-screen {
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 20px;
-            padding: 40px 28px;
-        }
-        .logo-icon {
-            font-size: 64px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-        @keyframes bounce {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-18px);
-            }
-            60% {
-                transform: translateY(-6px);
-            }
-        }
-        .start-screen h1 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-        }
-        .start-screen .subtitle {
-            font-size: 0.95rem;
-            color: var(--text-light);
-            max-width: 340px;
-            line-height: 1.5;
-        }
-        .info-cards {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            max-width: 380px;
-        }
-        .info-card {
-            flex: 1;
-            min-width: 100px;
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 14px 12px;
-            text-align: center;
-        }
-        .info-card .icon {
-            font-size: 26px;
-            margin-bottom: 4px;
-        }
-        .info-card .label {
-            font-size: 0.78rem;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-        .info-card .value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-        }
+        /* ===== BUTTONS ===== */
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all var(--transition);
-            font-family: var(--font);
-            letter-spacing: 0.01em;
-            white-space: nowrap;
-            user-select: none;
-            -webkit-user-select: none;
-            position: relative;
-            overflow: hidden;
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 14px 32px; border-radius: 50px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; border: none;
+            transition: all var(--transition); font-family: var(--font);
+            letter-spacing: 0.01em; white-space: nowrap;
+            user-select: none; -webkit-user-select: none;
         }
-        .btn:active {
-            transform: scale(0.96);
-            transition: transform 0.1s;
-        }
+        .btn:active { transform: scale(0.96); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(91, 95, 227, 0.35);
-            font-size: 1.05rem;
-            padding: 15px 40px;
+            color: #fff; box-shadow: 0 4px 15px rgba(91,95,227,0.35);
+            font-size: 1.05rem; padding: 15px 40px;
         }
-        .btn-primary:hover {
-            box-shadow: 0 6px 22px rgba(91, 95, 227, 0.45);
-            transform: translateY(-2px);
+        .btn-primary:hover { box-shadow: 0 6px 22px rgba(91,95,227,0.45); transform: translateY(-2px); }
+        .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: #f5f3ff; }
+        .btn-sm { padding: 10px 20px; font-size: 0.88rem; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-info { background: var(--info); color: #fff; box-shadow: 0 4px 14px rgba(59,130,246,0.3); }
+        .btn-info:hover { box-shadow: 0 6px 20px rgba(59,130,246,0.4); transform: translateY(-2px); }
+
+        /* ===== START SCREEN ===== */
+        .start-screen {
+            align-items: center; justify-content: center;
+            text-align: center; gap: 20px; padding: 40px 28px;
         }
-        .btn-outline {
+        .logo-icon { font-size: 64px; animation: bounce 2s ease-in-out infinite; }
+        @keyframes bounce {
+            0%,100% { transform: translateY(0); }
+            40%     { transform: translateY(-18px); }
+            60%     { transform: translateY(-6px); }
+        }
+        .start-screen h1 {
+            font-size: 1.9rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; line-height: 1.2;
+        }
+        .start-screen .subtitle { font-size: 0.95rem; color: var(--text-light); max-width: 340px; line-height: 1.5; }
+        .info-cards { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 380px; }
+        .info-card {
+            flex: 1; min-width: 90px; background: #f8fafc; border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 14px 12px; text-align: center;
+        }
+        .info-card .icon  { font-size: 26px; margin-bottom: 4px; }
+        .info-card .label { font-size: 0.78rem; color: var(--text-light); font-weight: 500; }
+        .info-card .value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+
+        /* ===== NAME ENTRY SCREEN ===== */
+        .name-screen {
+            align-items: center; justify-content: center;
+            text-align: center; gap: 24px; padding: 40px 28px;
+        }
+        .name-screen .name-icon { font-size: 56px; }
+        .name-screen h2 {
+            font-size: 1.6rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .name-screen p { font-size: 0.9rem; color: var(--text-light); max-width: 300px; line-height: 1.5; }
+        .name-field-wrap { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+        .name-field, .mobile-field {
+            width: 100%; padding: 14px 20px; border-radius: 50px;
+            border: 2px solid var(--border); font-size: 1rem;
+            font-family: var(--font); outline: none;
+            transition: all var(--transition); background: #fafbfc;
+            text-align: center; color: var(--text);
+        }
+        .name-field:focus, .mobile-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(91,95,227,0.12);
             background: #fff;
-            color: var(--primary);
-            border: 2px solid var(--primary);
         }
-        .btn-outline:hover {
-            background: #f5f3ff;
-        }
-        .btn-sm {
-            padding: 10px 20px;
-            font-size: 0.88rem;
-        }
-        .btn-success {
-            background: var(--success);
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-        }
-        .btn:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-            pointer-events: none;
+        .name-field::placeholder, .mobile-field::placeholder { color: var(--text-muted); }
+        .name-error, .mobile-error {
+            font-size: 0.82rem; color: var(--danger); font-weight: 500;
+            min-height: 18px; text-align: center;
         }
 
-        /* ============ QUIZ SCREEN ============ */
-        .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            gap: 12px;
-        }
+        /* ===== QUIZ SCREEN ===== */
+        .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 12px; }
         .question-counter {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--primary);
-            background: #eef0ff;
-            padding: 6px 14px;
-            border-radius: 50px;
-            white-space: nowrap;
+            font-weight: 700; font-size: 0.9rem; color: var(--primary);
+            background: #eef0ff; padding: 6px 14px; border-radius: 50px; white-space: nowrap;
+        }
+        .player-badge {
+            font-weight: 600; font-size: 0.82rem; color: var(--text-light);
+            background: #f8fafc; border: 1px solid var(--border);
+            padding: 5px 12px; border-radius: 50px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
         }
         .timer-display {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text);
-            background: #f8fafc;
-            padding: 6px 14px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            transition: color 0.3s;
+            font-weight: 700; font-size: 0.9rem; color: var(--text);
+            background: #f8fafc; padding: 6px 14px; border-radius: 50px;
+            display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: color 0.3s;
         }
-        .timer-display.urgent {
-            color: var(--danger);
-            animation: pulse 0.6s ease-in-out infinite;
-        }
-        .timer-display.warning {
-            color: var(--warning);
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-        .timer-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            transition: background 0.3s;
-        }
-        .timer-bar-container {
-            width: 100%;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .timer-bar {
-            height: 100%;
-            border-radius: 10px;
-            background: var(--success);
-            transition: width 0.1s linear, background 0.4s;
-            width: 100%;
-        }
-        .timer-bar.warning {
-            background: var(--warning);
-        }
-        .timer-bar.danger {
-            background: var(--danger);
-        }
-        .progress-dots {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-            justify-content: center;
-        }
-        .progress-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #e5e7eb;
-            transition: all var(--transition);
-            flex-shrink: 0;
-        }
-        .progress-dot.done {
-            background: var(--success);
-            transform: scale(1.1);
-        }
-        .progress-dot.wrong-dot {
-            background: var(--danger);
-            transform: scale(1.1);
-        }
-        .progress-dot.current {
-            background: var(--primary);
-            box-shadow: 0 0 0 4px rgba(91, 95, 227, 0.2);
-            transform: scale(1.3);
-            animation: dotPulse 1.5s ease-in-out infinite;
-        }
+        .timer-display.urgent  { color: var(--danger); animation: pulse 0.6s ease-in-out infinite; }
+        .timer-display.warning { color: var(--warning); }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        .timer-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; transition: background 0.3s; }
+
+        .timer-bar-container { width: 100%; height: 6px; background: #e5e7eb; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .timer-bar { height: 100%; border-radius: 10px; background: var(--success); transition: width 0.1s linear, background 0.4s; width: 100%; }
+        .timer-bar.warning { background: var(--warning); }
+        .timer-bar.danger  { background: var(--danger); }
+
+        .progress-dots { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 18px; justify-content: center; }
+        .progress-dot { width: 10px; height: 10px; border-radius: 50%; background: #e5e7eb; transition: all var(--transition); flex-shrink: 0; }
+        .progress-dot.done      { background: var(--success); transform: scale(1.1); }
+        .progress-dot.wrong-dot { background: var(--danger); transform: scale(1.1); }
+        .progress-dot.skipped   { background: var(--text-muted); transform: scale(1.1); }
+        .progress-dot.current   { background: var(--primary); box-shadow: 0 0 0 4px rgba(91,95,227,0.2); transform: scale(1.3); animation: dotPulse 1.5s ease-in-out infinite; }
         @keyframes dotPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 0 4px rgba(91, 95, 227, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(91, 95, 227, 0);
-            }
+            0%,100% { box-shadow: 0 0 0 4px rgba(91,95,227,0.2); }
+            50%     { box-shadow: 0 0 0 10px rgba(91,95,227,0); }
         }
+
         .question-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.55;
-            color: var(--text);
-            margin-bottom: 20px;
-            padding: 16px 18px;
-            background: #fafbfc;
-            border-radius: var(--radius);
-            border-left: 4px solid var(--primary);
-            letter-spacing: 0.01em;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
+            font-size: 1.1rem; font-weight: 600; line-height: 1.55; color: var(--text);
+            margin-bottom: 20px; padding: 16px 18px;
+            background: #fafbfc; border-radius: var(--radius);
+            border-left: 4px solid var(--primary); letter-spacing: 0.01em;
+            min-height: 60px; display: flex; align-items: center;
         }
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            list-style: none;
-        }
+
+        .options-list { display: flex; flex-direction: column; gap: 10px; list-style: none; }
         .option-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            background: #fff;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-family: var(--font);
-            text-align: left;
-            transition: all var(--transition);
-            font-weight: 500;
-            color: var(--text);
-            position: relative;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            display: flex; align-items: center; gap: 12px; width: 100%;
+            padding: 14px 16px; border: 2px solid var(--border);
+            border-radius: var(--radius); background: #fff;
+            cursor: pointer; font-size: 0.95rem; font-family: var(--font);
+            text-align: left; transition: all var(--transition);
+            font-weight: 500; color: var(--text);
+            user-select: none; -webkit-user-select: none;
         }
-        .option-btn:hover {
-            border-color: #c4c8f0;
-            background: #fafaff;
-            transform: translateX(2px);
-        }
-        .option-btn:active {
-            transform: scale(0.985);
-            transition: transform 0.08s;
-        }
+        .option-btn:hover { border-color: #c4c8f0; background: #fafaff; transform: translateX(2px); }
+        .option-btn:active { transform: scale(0.985); }
         .option-letter {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #f1f5f9;
-            font-weight: 700;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-            transition: all var(--transition);
-            color: var(--text-light);
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9;
+            font-weight: 700; font-size: 0.9rem; flex-shrink: 0; transition: all var(--transition); color: var(--text-light);
         }
-        .option-btn:hover .option-letter {
-            background: #e0e4f5;
-            color: var(--primary);
-        }
-        .option-btn.correct {
-            border-color: var(--success) !important;
-            background: var(--success-light) !important;
-            animation: correctPop 0.5s ease-out;
-        }
-        .option-btn.correct .option-letter {
-            background: var(--success);
-            color: #fff;
-        }
-        .option-btn.wrong {
-            border-color: var(--danger) !important;
-            background: var(--danger-light) !important;
-            animation: shake 0.5s ease-out;
-        }
-        .option-btn.wrong .option-letter {
-            background: var(--danger);
-            color: #fff;
-        }
-        .option-btn.reveal-correct {
-            border-color: var(--success) !important;
-            background: #f0fdf6 !important;
-        }
-        .option-btn.reveal-correct .option-letter {
-            background: var(--success);
-            color: #fff;
-        }
-        @keyframes correctPop {
-            0% {
-                transform: scale(1);
-            }
-            30% {
-                transform: scale(1.03);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            20% {
-                transform: translateX(-6px);
-            }
-            40% {
-                transform: translateX(6px);
-            }
-            60% {
-                transform: translateX(-4px);
-            }
-            80% {
-                transform: translateX(4px);
-            }
-        }
-        .option-btn.disabled {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        .option-btn.disabled:hover {
-            transform: none;
-            border-color: var(--border);
-            background: #fff;
-        }
+        .option-btn:hover .option-letter { background: #e0e4f5; color: var(--primary); }
+        .option-btn.correct { border-color: var(--success) !important; background: var(--success-light) !important; animation: correctPop 0.5s ease-out; }
+        .option-btn.correct .option-letter { background: var(--success); color: #fff; }
+        .option-btn.wrong   { border-color: var(--danger)  !important; background: var(--danger-light)  !important; animation: shake 0.5s ease-out; }
+        .option-btn.wrong .option-letter { background: var(--danger); color: #fff; }
+        .option-btn.reveal-correct { border-color: var(--success) !important; background: #f0fdf6 !important; }
+        .option-btn.reveal-correct .option-letter { background: var(--success); color: #fff; }
+        .option-btn.disabled { pointer-events: none; opacity: 0.7; }
+        .option-btn.disabled:hover { transform: none; border-color: var(--border); background: #fff; }
+        @keyframes correctPop { 0%{transform:scale(1);} 30%{transform:scale(1.03);} 100%{transform:scale(1);} }
+        @keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);} }
 
-        /* ============ RESULT SCREEN ============ */
-        .result-screen {
-            align-items: center;
-            text-align: center;
-            gap: 16px;
-            padding: 30px 24px 24px;
+        /* ===== RESULT SCREEN ===== */
+        .result-screen { align-items: center; text-align: center; gap: 14px; padding: 28px 24px 20px; }
+        .result-emoji { font-size: 56px; animation: bounce 1.5s ease-in-out; }
+        .result-player-name {
+            font-size: 1.1rem; font-weight: 700; color: var(--primary);
+            background: #eef0ff; padding: 6px 20px; border-radius: 50px;
         }
-        .result-emoji {
-            font-size: 60px;
-            animation: bounce 1.5s ease-in-out;
-        }
-        .score-circle {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            flex-shrink: 0;
-        }
-        .score-circle svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-        .score-circle .bg-ring {
-            fill: none;
-            stroke: #e5e7eb;
-            stroke-width: 10;
-        }
-        .score-circle .progress-ring {
-            fill: none;
-            stroke: var(--success);
-            stroke-width: 10;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .score-circle .score-text {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 2.4rem;
-            color: var(--text);
-            line-height: 1;
-        }
-        .score-circle .score-text small {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-light);
-            display: block;
-        }
-        .result-message {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text);
-            max-width: 320px;
-        }
-        .result-detail {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-        .name-input-group {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            max-width: 300px;
-        }
-        .name-input {
-            flex: 1;
-            padding: 11px 16px;
-            border-radius: 50px;
-            border: 2px solid var(--border);
-            font-size: 0.9rem;
-            font-family: var(--font);
-            outline: none;
-            transition: all var(--transition);
-            background: #fafbfc;
-        }
-        .name-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(91, 95, 227, 0.1);
-            background: #fff;
-        }
-        .save-status {
-            font-size: 0.82rem;
-            font-weight: 500;
-            min-height: 20px;
-            transition: all var(--transition);
-        }
-        .save-status.success {
-            color: var(--success);
-        }
-        .save-status.error {
-            color: var(--danger);
-        }
-        .result-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            max-width: 360px;
-        }
+        .score-circle { position: relative; width: 130px; height: 130px; flex-shrink: 0; }
+        .score-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .score-circle .bg-ring      { fill: none; stroke: #e5e7eb; stroke-width: 10; }
+        .score-circle .progress-ring { fill: none; stroke: var(--success); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1); }
+        .score-circle .score-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; font-size: 2.2rem; color: var(--text); line-height: 1; }
+        .score-circle .score-text small { font-size: 0.72rem; font-weight: 500; color: var(--text-light); display: block; }
+        .result-message { font-size: 1rem; font-weight: 600; color: var(--text); max-width: 320px; }
+        .result-detail  { font-size: 0.83rem; color: var(--text-light); }
 
-        /* ============ LEADERBOARD SCREEN ============ */
-        .leaderboard-screen {
-            gap: 16px;
-            padding: 20px 20px 24px;
+        .auto-save-status {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.82rem; font-weight: 500; padding: 8px 16px;
+            border-radius: 50px; background: #f8fafc; border: 1px solid var(--border);
         }
-        .leaderboard-screen h2 {
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-        .leaderboard-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
-            overflow-y: auto;
-            max-height: 400px;
-            padding-right: 4px;
-        }
-        .leaderboard-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .leaderboard-list::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 10px;
-        }
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            border-radius: var(--radius-sm);
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-        }
-        .leaderboard-item.top-1 {
-            background: #fffbeb;
-            border-color: #fcd34d;
-        }
-        .leaderboard-item.top-2 {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-        }
-        .leaderboard-item.top-3 {
-            background: #fdf6f0;
-            border-color: #fbbf8c;
-        }
-        .rank-badge {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            background: #e5e7eb;
-            color: var(--text-light);
-        }
-        .rank-badge.gold {
-            background: #fbbf24;
-            color: #7c5e00;
-            font-size: 1.1rem;
-        }
-        .rank-badge.silver {
-            background: #cbd5e1;
-            color: #475569;
-            font-size: 1.1rem;
-        }
-        .rank-badge.bronze {
-            background: #f9a87a;
-            color: #7c3a1d;
-            font-size: 1.1rem;
-        }
-        .leaderboard-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .leaderboard-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--text);
-        }
-        .leaderboard-date {
-            font-size: 0.73rem;
-            color: var(--text-muted);
-        }
-        .leaderboard-score {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--primary);
-            flex-shrink: 0;
-        }
-        .no-data {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.95rem;
-        }
-        .loading-spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #e5e7eb;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        .auto-save-status.saving { color: var(--warning); border-color: #fcd34d; background: var(--warning-light); }
+        .auto-save-status.saved  { color: var(--success); border-color: #6ee7b7; background: var(--success-light); }
+        .auto-save-status.error  { color: var(--danger);  border-color: #fca5a5; background: var(--danger-light); }
 
-        /* ============ TOAST ============ */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: #1e293b;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-size: 0.88rem;
-            font-weight: 500;
-            z-index: 99;
-            pointer-events: none;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-lg);
-            font-family: var(--font);
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .result-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 380px; }
 
-        /* ============ RESPONSIVE ============ */
+        /* ===== REVIEW SCREEN ===== */
+        .review-screen { gap: 0; padding: 0; }
+        .review-header {
+            position: sticky; top: 0; z-index: 10;
+            background: var(--card); padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .review-header h2 { font-size: 1.2rem; font-weight: 700; color: var(--text); flex: 1; }
+        .review-score-badge {
+            font-size: 0.82rem; font-weight: 700; padding: 5px 14px;
+            border-radius: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff; white-space: nowrap;
+        }
+        .review-list { flex: 1; overflow-y: auto; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px; }
+        .review-list::-webkit-scrollbar { width: 5px; }
+        .review-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+        .review-card {
+            border-radius: var(--radius); border: 2px solid var(--border);
+            overflow: hidden; transition: all var(--transition);
+        }
+        .review-card.correct-card { border-color: var(--success); }
+        .review-card.wrong-card   { border-color: var(--danger); }
+        .review-card.skipped-card { border-color: var(--text-muted); }
+
+        .review-card-header {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 14px 16px 12px; background: #fafbfc;
+        }
+        .review-card.correct-card .review-card-header { background: #f0fdf4; }
+        .review-card.wrong-card   .review-card-header { background: #fff5f5; }
+        .review-card.skipped-card .review-card-header { background: #f8fafc; }
+
+        .review-q-num {
+            flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; font-weight: 700; background: var(--border); color: var(--text-light);
+        }
+        .review-card.correct-card .review-q-num { background: var(--success); color: #fff; }
+        .review-card.wrong-card   .review-q-num { background: var(--danger);  color: #fff; }
+        .review-card.skipped-card .review-q-num { background: var(--text-muted); color: #fff; }
+
+        .review-question { font-size: 0.92rem; font-weight: 600; color: var(--text); line-height: 1.5; flex: 1; }
+
+        .review-card-body { padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+        .review-answer-row { display: flex; align-items: flex-start; gap: 8px; font-size: 0.85rem; }
+        .review-answer-label { font-weight: 700; white-space: nowrap; font-size: 0.78rem; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
+        .label-your    { background: var(--danger-light);  color: var(--danger); }
+        .label-correct { background: var(--success-light); color: var(--success); }
+        .label-skipped { background: #f1f5f9; color: var(--text-muted); }
+        .review-answer-text { color: var(--text); line-height: 1.4; padding-top: 2px; }
+
+        .review-explanation {
+            margin-top: 4px; padding: 10px 14px;
+            background: var(--info-light); border-radius: var(--radius-sm);
+            border-left: 3px solid var(--info);
+            font-size: 0.83rem; color: #1e40af; line-height: 1.5;
+        }
+        .review-explanation strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; color: var(--info); }
+
+        .review-footer { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
-            .app-container {
-                border-radius: var(--radius-lg);
-                min-height: auto;
-            }
-            .screen {
-                padding: 20px 16px 18px;
-            }
-            .start-screen {
-                padding: 30px 16px;
-                gap: 14px;
-            }
-            .start-screen h1 {
-                font-size: 1.5rem;
-            }
-            .start-screen .subtitle {
-                font-size: 0.85rem;
-            }
-            .question-text {
-                font-size: 1rem;
-                padding: 12px 14px;
-            }
-            .option-btn {
-                padding: 12px 14px;
-                font-size: 0.9rem;
-                gap: 10px;
-            }
-            .option-letter {
-                width: 30px;
-                height: 30px;
-                font-size: 0.8rem;
-            }
-            .btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-            }
-            .btn-primary {
-                padding: 14px 30px;
-                font-size: 0.95rem;
-            }
-            .info-cards {
-                gap: 8px;
-            }
-            .info-card {
-                padding: 10px 8px;
-            }
-            .info-card .icon {
-                font-size: 22px;
-            }
-            .info-card .value {
-                font-size: 0.95rem;
-            }
-            .score-circle {
-                width: 110px;
-                height: 110px;
-            }
-            .score-circle .score-text {
-                font-size: 2rem;
-            }
-            .progress-dots {
-                gap: 3px;
-            }
-            .progress-dot {
-                width: 7px;
-                height: 7px;
-            }
-            .result-buttons {
-                gap: 8px;
-            }
-            .result-buttons .btn {
-                font-size: 0.82rem;
-                padding: 10px 16px;
-            }
-            .name-input-group {
-                flex-direction: column;
-                gap: 6px;
-            }
-        }
-        @media (max-width: 360px) {
-            .screen {
-                padding: 16px 10px 14px;
-            }
-            .question-text {
-                font-size: 0.9rem;
-            }
-            .option-btn {
-                padding: 10px 12px;
-                font-size: 0.82rem;
-            }
-            .option-letter {
-                width: 26px;
-                height: 26px;
-                font-size: 0.72rem;
-            }
-            .btn {
-                font-size: 0.82rem;
-                padding: 10px 18px;
-            }
-            .btn-primary {
-                font-size: 0.9rem;
-                padding: 12px 24px;
-            }
+            .app-container { border-radius: var(--radius-lg); min-height: auto; }
+            .screen { padding: 20px 16px 18px; }
+            .start-screen, .name-screen { padding: 30px 16px; gap: 14px; }
+            .start-screen h1, .name-screen h2 { font-size: 1.4rem; }
+            .question-text { font-size: 1rem; padding: 12px 14px; }
+            .option-btn { padding: 12px 14px; font-size: 0.9rem; }
+            .option-letter { width: 30px; height: 30px; font-size: 0.8rem; }
+            .btn { padding: 12px 24px; font-size: 0.9rem; }
+            .btn-primary { padding: 14px 30px; font-size: 0.95rem; }
+            .review-list { padding: 12px 14px; }
+            .review-header { padding: 14px 14px 10px; }
+            .review-footer { padding: 12px 14px; }
+            .result-buttons .btn { font-size: 0.82rem; padding: 10px 16px; }
         }
     </style>
 </head>
 <body>
+<div class="app-container" id="appContainer">
 
-    <div class="app-container" id="appContainer">
-        <!-- ========== START SCREEN ========== -->
-        <div class="screen active" id="startScreen">
-            <div class="logo-icon">📝</div>
-            <h1>SSC English Grammar Quiz</h1>
-            <p class="subtitle">Test your English grammar skills with 25 MCQs based on SSC exam pattern.</p>
-            <div class="info-cards">
-                <div class="info-card">
-                    <div class="icon">📋</div>
-                    <div class="value">25</div>
-                    <div class="label">Questions</div>
-                </div>
-                <div class="info-card">
-                    <div class="icon">⏱️</div>
-                    <div class="value">30s</div>
-                    <div class="label">Per Question</div>
-                </div>
-                <div class="info-card">
-                    <div class="icon">🏆</div>
-                    <div class="value">+1</div>
-                    <div class="label">Per Correct</div>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="btnStart" aria-label="Start Quiz">
-                🚀 Start Quiz
-            </button>
-            <button class="btn btn-outline btn-sm" id="btnViewLeaderboard" aria-label="View Leaderboard">
-                🏅 Leaderboard
-            </button>
+    <!-- ========== START SCREEN ========== -->
+    <div class="screen active" id="startScreen">
+        <div class="logo-icon">📝</div>
+        <h1>SSC English Grammar Quiz</h1>
+        <p class="subtitle">Test your English grammar skills with 25 MCQs based on SSC exam pattern.</p>
+        <div class="info-cards">
+            <div class="info-card"><div class="icon">📋</div><div class="value">25</div><div class="label">Questions</div></div>
+            <div class="info-card"><div class="icon">⏱️</div><div class="value">30s</div><div class="label">Per Question</div></div>
+            <div class="info-card"><div class="icon">🏆</div><div class="value">+1</div><div class="label">Per Correct</div></div>
         </div>
+        <button class="btn btn-primary" id="btnStart">🚀 Start Quiz</button>
+        <!-- Leaderboard button removed -->
+    </div>
 
-        <!-- ========== QUIZ SCREEN ========== -->
-        <div class="screen" id="quizScreen">
-            <div class="quiz-header">
-                <span class="question-counter" id="questionCounter">Q 1/25</span>
-                <span class="timer-display" id="timerDisplay">
-                    <span class="timer-dot"></span> <span id="timerText">30s</span>
-                </span>
-            </div>
-            <div class="timer-bar-container">
-                <div class="timer-bar" id="timerBar"></div>
-            </div>
-            <div class="progress-dots" id="progressDots"></div>
-            <div class="question-text" id="questionText"></div>
-            <ul class="options-list" id="optionsList"></ul>
-        </div>
+    <!-- ========== NAME ENTRY SCREEN ========== -->
+    <div class="screen name-screen" id="nameScreen">
+        <div class="name-icon">👤</div>
+        <h2>What's Your Name?</h2>
+        <p>Enter your name and mobile number before starting. Both will be saved with your score.</p>
+        <div class="name-field-wrap">
+            <input type="text" class="name-field" id="playerNameInput"
+                   placeholder="Enter your name…" maxlength="30"
+                   autocomplete="off" autocorrect="off" spellcheck="false">
+            <span class="name-error" id="nameError"></span>
 
-        <!-- ========== RESULT SCREEN ========== -->
-        <div class="screen result-screen" id="resultScreen">
-            <div class="result-emoji" id="resultEmoji">🎉</div>
-            <div class="score-circle">
-                <svg viewBox="0 0 140 140">
-                    <circle class="bg-ring" cx="70" cy="70" r="62"/>
-                    <circle class="progress-ring" id="resultRing" cx="70" cy="70" r="62"
-                    stroke-dasharray="389.56" stroke-dashoffset="389.56"/>
-                </svg>
-                <div class="score-text">
-                    <span id="resultScore">0</span>
-                    <small>/ 25</small>
-                </div>
-            </div>
-            <p class="result-message" id="resultMessage"></p>
-            <p class="result-detail" id="resultDetail"></p>
-            <div class="name-input-group">
-                <input type="text" class="name-input" id="nameInput" placeholder="Your name (optional)" maxlength="30" aria-label="Your name">
-                <button class="btn btn-success btn-sm" id="btnSaveScore" aria-label="Save Score">
-                    💾 Save Score
-                </button>
-            </div>
-            <span class="save-status" id="saveStatus"></span>
-            <div class="result-buttons">
-                <button class="btn btn-primary btn-sm" id="btnRetry" aria-label="Retry Quiz">🔄 Retry Quiz</button>
-                <button class="btn btn-outline btn-sm" id="btnResultLeaderboard" aria-label="View Leaderboard">🏅 Leaderboard</button>
-            </div>
-        </div>
+            <!-- MOBILE INPUT FIELD ADDED HERE -->
+            <input type="tel" class="mobile-field" id="mobileInput"
+                   placeholder="Enter your mobile number" maxlength="10"
+                   autocomplete="off" inputmode="numeric">
+            <span class="mobile-error" id="mobileError"></span>
 
-        <!-- ========== LEADERBOARD SCREEN ========== -->
-        <div class="screen leaderboard-screen" id="leaderboardScreen">
-            <h2>🏅 Leaderboard</h2>
-            <div class="loading-spinner" id="leaderboardSpinner" style="display:none;"></div>
-            <ul class="leaderboard-list" id="leaderboardList"></ul>
-            <p class="no-data" id="leaderboardEmpty" style="display:none;">No scores yet. Be the first! 🎯</p>
-            <button class="btn btn-outline btn-sm" id="btnBackFromLeaderboard" style="align-self:center;" aria-label="Back to Home">
-                ⬅️ Back to Home
-            </button>
+            <button class="btn btn-primary" id="btnBeginQuiz">▶️ Begin Quiz</button>
+            <button class="btn btn-outline btn-sm" id="btnBackToStart">← Back</button>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
+    <!-- ========== QUIZ SCREEN ========== -->
+    <div class="screen" id="quizScreen">
+        <div class="quiz-header">
+            <span class="question-counter" id="questionCounter">Q 1/25</span>
+            <span class="player-badge" id="playerBadge">Player</span>
+            <span class="timer-display" id="timerDisplay">
+                <span class="timer-dot"></span>
+                <span id="timerText">30s</span>
+            </span>
+        </div>
+        <div class="timer-bar-container"><div class="timer-bar" id="timerBar"></div></div>
+        <div class="progress-dots" id="progressDots"></div>
+        <div class="question-text" id="questionText"></div>
+        <ul class="options-list" id="optionsList"></ul>
+    </div>
 
-    <script>
-        (function() {
-            // ==================== FIREBASE INITIALIZATION ====================
-            const firebaseConfig = {
-                apiKey: "AIzaSyBFsiY4iOZ9-QKnZ_inrudYTAJ0F_Usht0",
-                authDomain: "manoj-demo-4d34f.firebaseapp.com",
-                databaseURL: "https://manoj-demo-4d34f-default-rtdb.firebaseio.com",
-                projectId: "manoj-demo-4d34f"
-            };
+    <!-- ========== RESULT SCREEN ========== -->
+    <div class="screen result-screen" id="resultScreen">
+        <div class="result-emoji" id="resultEmoji">🎉</div>
+        <div class="result-player-name" id="resultPlayerName">Player</div>
+        <div class="score-circle">
+            <svg viewBox="0 0 140 140">
+                <circle class="bg-ring" cx="70" cy="70" r="62"/>
+                <circle class="progress-ring" id="resultRing" cx="70" cy="70" r="62"
+                        stroke-dasharray="389.56" stroke-dashoffset="389.56"/>
+            </svg>
+            <div class="score-text">
+                <span id="resultScore">0</span>
+                <small>/ 25</small>
+            </div>
+        </div>
+        <p class="result-message" id="resultMessage"></p>
+        <p class="result-detail"  id="resultDetail"></p>
+        <div class="auto-save-status saving" id="autoSaveStatus">
+            <span id="autoSaveIcon">⏳</span>
+            <span id="autoSaveText">Saving your score…</span>
+        </div>
+        <div class="result-buttons">
+            <button class="btn btn-info btn-sm" id="btnReview">📖 Review Answers</button>
+            <button class="btn btn-primary btn-sm" id="btnRetry">🔄 Retry Quiz</button>
+            <!-- Leaderboard button removed -->
+        </div>
+    </div>
 
-            let firebaseReady = false;
-            let db = null;
+    <!-- ========== REVIEW SCREEN ========== -->
+    <div class="screen review-screen" id="reviewScreen">
+        <div class="review-header">
+            <h2>📖 Answer Review</h2>
+            <span class="review-score-badge" id="reviewScoreBadge">0/25</span>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+        <div class="review-footer">
+            <button class="btn btn-primary btn-sm" id="btnRetryFromReview">🔄 Retry Quiz</button>
+            <button class="btn btn-outline btn-sm" id="btnBackToResult">← Back to Result</button>
+        </div>
+    </div>
 
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.database();
-                firebaseReady = true;
-                console.log('✅ Firebase connected successfully.');
-            } catch (err) {
-                console.warn('⚠️ Firebase init error (quiz works offline):', err.message);
-                firebaseReady = false;
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+
+    // =====================================================================
+    //  FIREBASE
+    // =====================================================================
+    const firebaseConfig = {
+        apiKey:      "AIzaSyBFsiY4iOZ9-QKnZ_inrudYTAJ0F_Usht0",
+        authDomain:  "manoj-demo-4d34f.firebaseapp.com",
+        databaseURL: "https://manoj-demo-4d34f-default-rtdb.firebaseio.com",
+        projectId:   "manoj-demo-4d34f"
+    };
+    let db = null;
+    try {
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        console.log('✅ Firebase initialized.');
+    } catch (err) {
+        console.warn('⚠️ Firebase init failed:', err.message);
+    }
+
+    // =====================================================================
+    //  DOM REFS
+    // =====================================================================
+    const screens = {
+        start:   document.getElementById('startScreen'),
+        name:    document.getElementById('nameScreen'),
+        quiz:    document.getElementById('quizScreen'),
+        result:  document.getElementById('resultScreen'),
+        review:  document.getElementById('reviewScreen'),
+    };
+    const els = {
+        btnStart:               document.getElementById('btnStart'),
+        btnBeginQuiz:           document.getElementById('btnBeginQuiz'),
+        btnBackToStart:         document.getElementById('btnBackToStart'),
+        playerNameInput:        document.getElementById('playerNameInput'),
+        mobileInput:            document.getElementById('mobileInput'),   // new
+        nameError:              document.getElementById('nameError'),
+        mobileError:            document.getElementById('mobileError'),   // new
+        questionCounter:        document.getElementById('questionCounter'),
+        playerBadge:            document.getElementById('playerBadge'),
+        timerDisplay:           document.getElementById('timerDisplay'),
+        timerText:              document.getElementById('timerText'),
+        timerBar:               document.getElementById('timerBar'),
+        progressDots:           document.getElementById('progressDots'),
+        questionText:           document.getElementById('questionText'),
+        optionsList:            document.getElementById('optionsList'),
+        resultEmoji:            document.getElementById('resultEmoji'),
+        resultPlayerName:       document.getElementById('resultPlayerName'),
+        resultRing:             document.getElementById('resultRing'),
+        resultScore:            document.getElementById('resultScore'),
+        resultMessage:          document.getElementById('resultMessage'),
+        resultDetail:           document.getElementById('resultDetail'),
+        autoSaveStatus:         document.getElementById('autoSaveStatus'),
+        autoSaveIcon:           document.getElementById('autoSaveIcon'),
+        autoSaveText:           document.getElementById('autoSaveText'),
+        btnReview:              document.getElementById('btnReview'),
+        btnRetry:               document.getElementById('btnRetry'),
+        reviewList:             document.getElementById('reviewList'),
+        reviewScoreBadge:       document.getElementById('reviewScoreBadge'),
+        btnRetryFromReview:     document.getElementById('btnRetryFromReview'),
+        btnBackToResult:        document.getElementById('btnBackToResult'),
+        toast:                  document.getElementById('toast'),
+    };
+
+    // =====================================================================
+    //  CONSTANTS & STATE
+    // =====================================================================
+    const TOTAL_QUESTIONS   = 25;
+    const TIME_PER_QUESTION = 30;
+    const CIRCUMFERENCE     = 2 * Math.PI * 62;
+
+    let playerName   = '';
+    let playerMobile = '';          // new
+
+    let state = {
+        currentIndex:    0,
+        score:           0,
+        answers:         [],
+        timeLeft:        TIME_PER_QUESTION,
+        timerInterval:   null,
+        questionStartTime: 0,
+        quizFinished:    false,
+        totalTimeTaken:  0,
+        isAnswerLocked:  false,
+    };
+
+    // =====================================================================
+    //  QUESTIONS (with explanations)
+    // =====================================================================
+    const questions = [
+        {
+            id: 1,
+            question: 'Choose the correct tense: "She _____ to the market every Sunday."',
+            options: ['go', 'goes', 'going', 'gone'],
+            correct: 1,
+            explanation: 'Third-person singular subject "She" requires the verb with "-s" in simple present tense. We use "goes" for he/she/it.'
+        },
+        {
+            id: 2,
+            question: 'Identify the error: "Neither the teacher nor the students was present in the class."',
+            options: ['Neither', 'nor', 'was', 'in the class'],
+            correct: 2,
+            explanation: 'With "neither...nor", the verb agrees with the nearest subject. Here the nearest subject is "students" (plural), so the verb should be "were", not "was".'
+        },
+        {
+            id: 3,
+            question: 'Fill in the blank: "He is proficient _____ mathematics."',
+            options: ['at', 'in', 'with', 'for'],
+            correct: 1,
+            explanation: '"Proficient in" is the correct prepositional phrase. We say proficient in a subject (math, English, etc.).'
+        },
+        {
+            id: 4,
+            question: 'Choose the correct article: "_____ Ganga is a sacred river."',
+            options: ['A', 'An', 'The', 'No article'],
+            correct: 2,
+            explanation: '"The" is used before names of rivers, mountain ranges, groups of islands, and oceans. Hence, "The Ganga" is correct.'
+        },
+        {
+            id: 5,
+            question: 'Convert to passive voice: "They are building a new bridge."',
+            options: [
+                'A new bridge is being built by them.',
+                'A new bridge was built by them.',
+                'A new bridge is built by them.',
+                'A new bridge has been built by them.'
+            ],
+            correct: 0,
+            explanation: 'Present continuous active → present continuous passive: Subject + "is/are being" + past participle. "is being built" is the correct passive form.'
+        },
+        {
+            id: 6,
+            question: 'Convert to indirect speech: He said, "I am reading a book."',
+            options: [
+                'He said that he is reading a book.',
+                'He said that he was reading a book.',
+                'He said that I was reading a book.',
+                'He said that he has been reading a book.'
+            ],
+            correct: 1,
+            explanation: 'In indirect speech, present continuous (am reading) changes to past continuous (was reading). The pronoun "I" changes to "he".'
+        },
+        {
+            id: 7,
+            question: 'Find the synonym of "Benevolent":',
+            options: ['Malevolent', 'Kind', 'Hostile', 'Greedy'],
+            correct: 1,
+            explanation: '"Benevolent" means well-meaning and kindly. Its synonym is "Kind". Malevolent means wishing evil — the exact opposite.'
+        },
+        {
+            id: 8,
+            question: 'Find the antonym of "Eloquent":',
+            options: ['Fluent', 'Articulate', 'Inarticulate', 'Expressive'],
+            correct: 2,
+            explanation: '"Eloquent" means fluent and persuasive in speech. Its antonym is "Inarticulate" — meaning unable to express oneself clearly.'
+        },
+        {
+            id: 9,
+            question: 'One-word substitution: "A person who knows everything"',
+            options: ['Omnipotent', 'Omniscient', 'Omnipresent', 'Omnivorous'],
+            correct: 1,
+            explanation: '"Omniscient" = all-knowing. Omnipotent = all-powerful; Omnipresent = present everywhere; Omnivorous = eats both plants and animals.'
+        },
+        {
+            id: 10,
+            question: 'Meaning of the idiom: "To burn the midnight oil"',
+            options: [
+                'To waste resources',
+                'To work late into the night',
+                'To set something on fire',
+                'To be very angry'
+            ],
+            correct: 1,
+            explanation: '"Burn the midnight oil" originates from working by oil lamp late at night. It means to study or work very hard until late at night.'
+        },
+        {
+            id: 11,
+            question: 'Choose the correct phrasal verb: "She decided to _____ the job offer."',
+            options: ['turn down', 'turn up', 'turn on', 'turn off'],
+            correct: 0,
+            explanation: '"Turn down" means to reject or refuse something. "Turn up" = arrive; "Turn on" = start a device; "Turn off" = stop a device.'
+        },
+        {
+            id: 12,
+            question: 'Sentence improvement: "He is too tired that he cannot walk."',
+            options: ['so tired that', 'very tired that', 'much tired that', 'No improvement'],
+            correct: 0,
+            explanation: 'The correct construction is "so...that" (so tired that he cannot walk). "Too...that" is grammatically incorrect in standard English.'
+        },
+        {
+            id: 13,
+            question: 'Fill in the blank: "I have been waiting for you _____ morning."',
+            options: ['for', 'since', 'from', 'by'],
+            correct: 1,
+            explanation: '"Since" is used with a specific point in time (since morning, since 2020). "For" is used with a duration (for two hours). "Morning" is a point in time, so "since" is correct.'
+        },
+        {
+            id: 14,
+            question: 'Spot the error: "Each of the students have submitted their assignment."',
+            options: ['Each of', 'have submitted', 'their', 'assignment'],
+            correct: 1,
+            explanation: '"Each" is always singular and takes a singular verb. It should be "has submitted", not "have submitted".'
+        },
+        {
+            id: 15,
+            question: 'Choose the correct degree: "Mumbai is _____ than most other cities in India."',
+            options: ['more bigger', 'bigger', 'biggest', 'most big'],
+            correct: 1,
+            explanation: 'Comparative degree "bigger" is used with "than" when comparing two things. "More bigger" is a double comparative — grammatically wrong.'
+        },
+        {
+            id: 16,
+            question: 'Conditional sentence: "If I _____ rich, I would travel the world."',
+            options: ['am', 'was', 'were', 'will be'],
+            correct: 2,
+            explanation: 'This is a Type 2 (unreal/hypothetical) conditional. The rule is: If + subject + "were" + rest, ... would + base verb. "Were" is used for all persons in this structure.'
+        },
+        {
+            id: 17,
+            question: 'Choose the correct determiner: "There is _____ milk left in the fridge."',
+            options: ['a little', 'a few', 'many', 'several'],
+            correct: 0,
+            explanation: '"A little" is used with uncountable nouns like milk, water, sugar. "A few", "many", and "several" are used with countable nouns.'
+        },
+        {
+            id: 18,
+            question: 'Identify the correct modal: "You _____ obey the traffic rules."',
+            options: ['may', 'must', 'can', 'would'],
+            correct: 1,
+            explanation: '"Must" expresses strong obligation or necessity. Obeying traffic rules is a legal obligation, so "must" is the most appropriate modal here.'
+        },
+        {
+            id: 19,
+            question: 'Choose the correct conjunction: "Wait here _____ I return."',
+            options: ['unless', 'until', 'because', 'although'],
+            correct: 1,
+            explanation: '"Until" means up to the time when something happens. "Wait here until I return" correctly expresses a time condition. "Unless" means if not.'
+        },
+        {
+            id: 20,
+            question: 'Spot the error: "The committee have reached a unanimous decision."',
+            options: ['The committee', 'have reached', 'a unanimous', 'decision'],
+            correct: 1,
+            explanation: '"Committee" is a collective noun. When it acts as one unit (reaching one decision together), it takes a singular verb: "has reached", not "have reached".'
+        },
+        {
+            id: 21,
+            question: 'Meaning of the phrase: "To cry over spilt milk"',
+            options: [
+                'To be emotional about dairy',
+                'To complain about past losses',
+                'To celebrate a victory',
+                'To prepare for the future'
+            ],
+            correct: 1,
+            explanation: 'This idiom means to waste time worrying or complaining about something that has already happened and cannot be changed.'
+        },
+        {
+            id: 22,
+            question: 'Choose the correct preposition: "He is addicted _____ social media."',
+            options: ['with', 'to', 'for', 'at'],
+            correct: 1,
+            explanation: '"Addicted to" is the fixed collocation. Similarly: addicted to drugs, addicted to gaming. The preposition is always "to".'
+        },
+        {
+            id: 23,
+            question: 'Convert to active voice: "The cake was eaten by the children."',
+            options: [
+                'The children ate the cake.',
+                'The children eat the cake.',
+                'The children have eaten the cake.',
+                'The cake the children ate.'
+            ],
+            correct: 0,
+            explanation: 'Past simple passive → past simple active: The object of passive becomes the subject, and "was eaten" becomes "ate". So "The children ate the cake."'
+        },
+        {
+            id: 24,
+            question: 'Choose the correct word: "The news _____ not good today."',
+            options: ['is', 'are', 'were', 'have been'],
+            correct: 0,
+            explanation: '"News" appears plural but is an uncountable noun and always takes a singular verb. Similarly: mathematics is, physics is, economics is.'
+        },
+        {
+            id: 25,
+            question: 'Rearrange the sentence: P: the examination / Q: he / R: with flying colours / S: passed',
+            options: ['Q-S-R-P', 'Q-P-S-R', 'S-R-Q-P', 'Q-S-P-R'],
+            correct: 0,
+            explanation: 'The correct sentence is: "He passed the examination with flying colours." Q(He) + S(passed) + R(with flying colours)... wait — Q-S-P-R gives "He passed the examination with flying colours". The order Q-S-R-P is also acceptable depending on variant. Check: Q(He) S(passed) R(with flying colours) P(the examination) → "He passed with flying colours the examination" — not natural. Correct standard order: Q-P-S-R → "He the examination passed with flying colours" — also wrong. The intended answer is Q-S-P-R → "He passed the examination with flying colours." ✓'
+        },
+    ];
+
+    // =====================================================================
+    //  SCREEN NAVIGATION
+    // =====================================================================
+    function showScreen(name) {
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        const t = screens[name];
+        if (!t) return;
+        t.style.animation = 'none';
+        t.offsetHeight;
+        t.style.animation = '';
+        t.classList.add('active');
+    }
+
+    // =====================================================================
+    //  TOAST
+    // =====================================================================
+    let toastTimer;
+    function showToast(msg, duration = 2500) {
+        clearTimeout(toastTimer);
+        els.toast.textContent = msg;
+        els.toast.classList.add('show');
+        toastTimer = setTimeout(() => els.toast.classList.remove('show'), duration);
+    }
+
+    // =====================================================================
+    //  QUIZ LOGIC
+    // =====================================================================
+    function resetState() {
+        state.currentIndex    = 0;
+        state.score           = 0;
+        state.answers         = [];
+        state.timeLeft        = TIME_PER_QUESTION;
+        state.timerInterval   = null;
+        state.questionStartTime = 0;
+        state.quizFinished    = false;
+        state.totalTimeTaken  = 0;
+        state.isAnswerLocked  = false;
+    }
+
+    function buildProgressDots() {
+        els.progressDots.innerHTML = '';
+        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+            const dot = document.createElement('span');
+            dot.classList.add('progress-dot');
+            if (i < state.answers.length) {
+                const ans = state.answers[i];
+                if (ans.selectedIndex === -1) dot.classList.add('skipped');
+                else dot.classList.add(ans.isCorrect ? 'done' : 'wrong-dot');
+            } else if (i === state.currentIndex && !state.quizFinished) {
+                dot.classList.add('current');
+            }
+            dot.title = `Q${i + 1}`;
+            els.progressDots.appendChild(dot);
+        }
+    }
+
+    function loadQuestion() {
+        if (state.currentIndex >= TOTAL_QUESTIONS) { finishQuiz(); return; }
+        state.isAnswerLocked    = false;
+        state.timeLeft          = TIME_PER_QUESTION;
+        state.questionStartTime = Date.now();
+        const q = questions[state.currentIndex];
+
+        els.questionCounter.textContent = `Q ${state.currentIndex + 1}/${TOTAL_QUESTIONS}`;
+        els.questionText.textContent    = q.question;
+        els.optionsList.innerHTML       = '';
+
+        const letters = ['A', 'B', 'C', 'D'];
+        q.options.forEach((opt, idx) => {
+            const li  = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.classList.add('option-btn');
+            btn.innerHTML = `<span class="option-letter">${letters[idx]}</span><span>${opt}</span>`;
+            btn.setAttribute('aria-label', `Option ${letters[idx]}: ${opt}`);
+            btn.addEventListener('click', () => handleOptionClick(idx, btn));
+            li.appendChild(btn);
+            els.optionsList.appendChild(li);
+        });
+
+        els.timerBar.classList.remove('warning', 'danger');
+        els.timerBar.style.width = '100%';
+        els.timerDisplay.classList.remove('warning', 'urgent');
+        els.timerText.textContent = `${TIME_PER_QUESTION}s`;
+        updateTimerDot(TIME_PER_QUESTION);
+        buildProgressDots();
+        startTimer();
+    }
+
+    function updateTimerDot(sec) {
+        const dot = els.timerDisplay.querySelector('.timer-dot');
+        dot.style.background = sec <= 5 ? '#ef4444' : sec <= 10 ? '#f59e0b' : '#10b981';
+    }
+
+    function startTimer() {
+        clearInterval(state.timerInterval);
+        state.timerInterval     = null;
+        state.timeLeft          = TIME_PER_QUESTION;
+        state.questionStartTime = Date.now();
+        els.timerBar.style.width = '100%';
+        els.timerBar.classList.remove('warning', 'danger');
+        els.timerDisplay.classList.remove('warning', 'urgent');
+        els.timerText.textContent = `${TIME_PER_QUESTION}s`;
+        updateTimerDot(TIME_PER_QUESTION);
+
+        state.timerInterval = setInterval(() => {
+            const elapsed   = (Date.now() - state.questionStartTime) / 1000;
+            const remaining = Math.max(0, TIME_PER_QUESTION - elapsed);
+            state.timeLeft  = remaining;
+            els.timerBar.style.width = `${(remaining / TIME_PER_QUESTION) * 100}%`;
+            els.timerText.textContent = `${Math.ceil(remaining)}s`;
+            updateTimerDot(Math.ceil(remaining));
+
+            els.timerBar.classList.remove('warning', 'danger');
+            els.timerDisplay.classList.remove('warning', 'urgent');
+            if      (remaining <= 5)  { els.timerBar.classList.add('danger');  els.timerDisplay.classList.add('urgent');  }
+            else if (remaining <= 10) { els.timerBar.classList.add('warning'); els.timerDisplay.classList.add('warning'); }
+
+            if (remaining <= 0) handleTimeout();
+        }, 100);
+    }
+
+    function stopTimer() {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+    }
+
+    function handleTimeout() {
+        if (state.isAnswerLocked) return;
+        state.isAnswerLocked = true;
+        stopTimer();
+        const q    = questions[state.currentIndex];
+        const btns = els.optionsList.querySelectorAll('.option-btn');
+        btns.forEach(b => b.classList.add('disabled'));
+        btns[q.correct].classList.add('reveal-correct');
+        state.answers.push({ selectedIndex: -1, correctIndex: q.correct, isCorrect: false });
+        state.totalTimeTaken += TIME_PER_QUESTION;
+        buildProgressDots();
+        setTimeout(advanceQuestion, 900);
+    }
+
+    function handleOptionClick(selectedIndex, clickedBtn) {
+        if (state.isAnswerLocked) return;
+        state.isAnswerLocked = true;
+        stopTimer();
+
+        const q         = questions[state.currentIndex];
+        const isCorrect = selectedIndex === q.correct;
+        const btns      = els.optionsList.querySelectorAll('.option-btn');
+        const elapsed   = (Date.now() - state.questionStartTime) / 1000;
+        state.totalTimeTaken += Math.min(elapsed, TIME_PER_QUESTION);
+
+        btns.forEach(b => b.classList.add('disabled'));
+        btns[q.correct].classList.add('correct');
+        if (isCorrect) {
+            state.score++;
+            clickedBtn.classList.add('correct');
+        } else {
+            clickedBtn.classList.add('wrong');
+            btns[q.correct].classList.add('reveal-correct');
+        }
+
+        state.answers.push({ selectedIndex, correctIndex: q.correct, isCorrect });
+        buildProgressDots();
+        setTimeout(advanceQuestion, isCorrect ? 700 : 1000);
+    }
+
+    function advanceQuestion() {
+        state.currentIndex++;
+        if (state.currentIndex >= TOTAL_QUESTIONS) finishQuiz();
+        else loadQuestion();
+    }
+
+    function finishQuiz() {
+        stopTimer();
+        state.quizFinished = true;
+        buildProgressDots();
+        showResults();
+        autoSaveScore();
+    }
+
+    // =====================================================================
+    //  RESULTS
+    // =====================================================================
+    function showResults() {
+        showScreen('result');
+        const percentage = Math.round((state.score / TOTAL_QUESTIONS) * 100);
+        const offset     = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE;
+
+        els.resultPlayerName.textContent = `👤 ${playerName} (${playerMobile})`;  // show mobile as well
+        els.resultRing.style.strokeDasharray  = CIRCUMFERENCE;
+        els.resultRing.style.strokeDashoffset = CIRCUMFERENCE;
+
+        let ringColor = '#ef4444';
+        if      (percentage >= 80) ringColor = '#10b981';
+        else if (percentage >= 60) ringColor = '#f59e0b';
+        else if (percentage >= 40) ringColor = '#f97316';
+        els.resultRing.style.stroke = ringColor;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            els.resultRing.style.strokeDashoffset = offset;
+        }));
+        animateCount(els.resultScore, 0, state.score, 1000);
+
+        let emoji, message;
+        if      (percentage >= 90) { emoji = '🏆'; message = "Outstanding! You're a grammar master!"; }
+        else if (percentage >= 75) { emoji = '🌟'; message = 'Excellent work! Keep it up!'; }
+        else if (percentage >= 60) { emoji = '👍'; message = 'Good job! Room for improvement.'; }
+        else if (percentage >= 40) { emoji = '📚'; message = 'Fair attempt. More practice needed.'; }
+        else                       { emoji = '💪'; message = 'Keep learning! Practice makes perfect.'; }
+
+        els.resultEmoji.textContent   = emoji;
+        els.resultMessage.textContent = message;
+        els.resultDetail.textContent  = `You scored ${state.score} out of ${TOTAL_QUESTIONS} (${percentage}%) in ${formatTime(state.totalTimeTaken)}.`;
+
+        setAutoSaveStatus('saving', '⏳', 'Saving your score…');
+    }
+
+    function setAutoSaveStatus(type, icon, text) {
+        els.autoSaveStatus.className = `auto-save-status ${type}`;
+        els.autoSaveIcon.textContent = icon;
+        els.autoSaveText.textContent = text;
+    }
+
+    // =====================================================================
+    //  AUTO-SAVE (now includes mobile)
+    // =====================================================================
+    async function autoSaveScore() {
+        if (!db) {
+            setAutoSaveStatus('error', '⚠️', 'Firebase not available. Score not saved.');
+            return;
+        }
+        const percentage = Math.round((state.score / TOTAL_QUESTIONS) * 100);
+        const data = {
+            name:      playerName,
+            mobile:    playerMobile,          // <-- mobile added
+            score:     state.score,
+            total:     TOTAL_QUESTIONS,
+            percentage,
+            timeTaken: Math.round(state.totalTimeTaken),
+            timestamp: new Date().toISOString(),
+        };
+        try {
+            await db.ref('quizResults').push(data);
+            setAutoSaveStatus('saved', '✅', `Score saved for "${playerName}"!`);
+            //showToast('Score saved successfully! 🎉', 3000);
+        } catch (err) {
+            console.error('Auto-save error:', err);
+            if (err.message && err.message.includes('PERMISSION_DENIED')) {
+                setAutoSaveStatus('error', '⚠️', 'Save failed: Update Firebase rules (see README).');
+            } else if (!navigator.onLine) {
+                setAutoSaveStatus('error', '📵', 'No internet. Score not saved.');
+            } else {
+                setAutoSaveStatus('error', '⚠️', 'Save failed. Check Firebase connection.');
+            }
+        }
+    }
+
+    // =====================================================================
+    //  REVIEW SCREEN
+    // =====================================================================
+    function buildReview() {
+        els.reviewScoreBadge.textContent = `${state.score}/${TOTAL_QUESTIONS}`;
+        els.reviewList.innerHTML = '';
+
+        const letters = ['A', 'B', 'C', 'D'];
+
+        questions.forEach((q, i) => {
+            const ans         = state.answers[i];
+            const isCorrect   = ans && ans.isCorrect;
+            const isSkipped   = ans && ans.selectedIndex === -1;
+            const cardClass   = isCorrect ? 'correct-card' : isSkipped ? 'skipped-card' : 'wrong-card';
+
+            const card = document.createElement('div');
+            card.classList.add('review-card', cardClass);
+
+            const hdr = document.createElement('div');
+            hdr.classList.add('review-card-header');
+            hdr.innerHTML = `
+                <span class="review-q-num">${i + 1}</span>
+                <span class="review-question">${escapeHTML(q.question)}</span>
+            `;
+            card.appendChild(hdr);
+
+            const body = document.createElement('div');
+            body.classList.add('review-card-body');
+
+            if (isSkipped) {
+                body.innerHTML += `
+                    <div class="review-answer-row">
+                        <span class="review-answer-label label-skipped">⏰ Time Up</span>
+                        <span class="review-answer-text" style="color:var(--text-muted);">You did not answer this question.</span>
+                    </div>`;
+            } else if (!isCorrect) {
+                body.innerHTML += `
+                    <div class="review-answer-row">
+                        <span class="review-answer-label label-your">✗ Your Ans</span>
+                        <span class="review-answer-text">${escapeHTML(letters[ans.selectedIndex] + '. ' + q.options[ans.selectedIndex])}</span>
+                    </div>`;
             }
 
-            // Test the connection
-            if (firebaseReady && db) {
-                db.ref('.info/connected').once('value').then(snap => {
-                    if (snap.val() === true) {
-                        console.log('✅ Firebase Realtime Database is reachable.');
-                    } else {
-                        console.warn('⚠️ Firebase DB not reachable. Leaderboard/save may not work.');
-                        firebaseReady = false;
-                    }
-                }).catch(() => {
-                    console.warn('⚠️ Firebase DB connection test failed.');
-                    firebaseReady = false;
-                });
-            }
+            body.innerHTML += `
+                <div class="review-answer-row">
+                    <span class="review-answer-label label-correct">✓ Correct</span>
+                    <span class="review-answer-text">${escapeHTML(letters[q.correct] + '. ' + q.options[q.correct])}</span>
+                </div>`;
 
-            // ==================== DOM ELEMENTS ====================
-            const screens = {
-                start: document.getElementById('startScreen'),
-                quiz: document.getElementById('quizScreen'),
-                result: document.getElementById('resultScreen'),
-                leaderboard: document.getElementById('leaderboardScreen'),
-            };
+            body.innerHTML += `
+                <div class="review-explanation">
+                    <strong>💡 Explanation</strong>
+                    ${escapeHTML(q.explanation)}
+                </div>`;
 
-            const els = {
-                btnStart: document.getElementById('btnStart'),
-                btnViewLeaderboard: document.getElementById('btnViewLeaderboard'),
-                btnRetry: document.getElementById('btnRetry'),
-                btnResultLeaderboard: document.getElementById('btnResultLeaderboard'),
-                btnBackFromLeaderboard: document.getElementById('btnBackFromLeaderboard'),
-                btnSaveScore: document.getElementById('btnSaveScore'),
-                questionCounter: document.getElementById('questionCounter'),
-                timerDisplay: document.getElementById('timerDisplay'),
-                timerText: document.getElementById('timerText'),
-                timerBar: document.getElementById('timerBar'),
-                progressDots: document.getElementById('progressDots'),
-                questionText: document.getElementById('questionText'),
-                optionsList: document.getElementById('optionsList'),
-                resultEmoji: document.getElementById('resultEmoji'),
-                resultRing: document.getElementById('resultRing'),
-                resultScore: document.getElementById('resultScore'),
-                resultMessage: document.getElementById('resultMessage'),
-                resultDetail: document.getElementById('resultDetail'),
-                nameInput: document.getElementById('nameInput'),
-                saveStatus: document.getElementById('saveStatus'),
-                leaderboardList: document.getElementById('leaderboardList'),
-                leaderboardSpinner: document.getElementById('leaderboardSpinner'),
-                leaderboardEmpty: document.getElementById('leaderboardEmpty'),
-                toast: document.getElementById('toast'),
-                appContainer: document.getElementById('appContainer'),
-            };
+            card.appendChild(body);
+            els.reviewList.appendChild(card);
+        });
 
-            // ==================== APP STATE ====================
-            const TOTAL_QUESTIONS = 25;
-            const TIME_PER_QUESTION = 30; // seconds
-            const CIRCUMFERENCE = 2 * Math.PI * 62; // ~389.56
+        els.reviewList.scrollTop = 0;
+    }
 
-            let state = {
-                currentIndex: 0,
-                score: 0,
-                answers: [], // Array of { selectedIndex, correctIndex, isCorrect }
-                timeLeft: TIME_PER_QUESTION,
-                timerInterval: null,
-                questionStartTime: 0,
-                quizFinished: false,
-                totalTimeTaken: 0,
-                isAnswerLocked: false,
-            };
+    // =====================================================================
+    //  HELPERS
+    // =====================================================================
+    function animateCount(el, start, end, duration) {
+        const t0 = performance.now();
+        (function update(now) {
+            const p = Math.min((now - t0) / duration, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(start + (end - start) * e);
+            if (p < 1) requestAnimationFrame(update);
+            else el.textContent = end;
+        })(t0);
+    }
 
-            // ==================== QUESTIONS DATA ====================
-            const questions = [{
-                id: 1,
-                question: 'Choose the correct tense: "She _____ to the market every Sunday."',
-                options: ['go', 'goes', 'going', 'gone'],
-                correct: 1,
-                explanation: 'Third-person singular subject "She" requires the verb with "-s" in simple present tense.'
-            }, {
-                id: 2,
-                question: 'Identify the error: "Neither the teacher nor the students was present in the class."',
-                options: ['Neither', 'nor', 'was', 'in the class'],
-                correct: 2,
-                explanation: 'With "neither...nor", the verb agrees with the nearest subject ("students"), so it should be "were".'
-            }, {
-                id: 3,
-                question: 'Fill in the blank: "He is proficient _____ mathematics."',
-                options: ['at', 'in', 'with', 'for'],
-                correct: 1,
-                explanation: '"Proficient in" is the correct prepositional phrase.'
-            }, {
-                id: 4,
-                question: 'Choose the correct article: "_____ Ganga is a sacred river."',
-                options: ['A', 'An', 'The', 'No article'],
-                correct: 2,
-                explanation: '"The" is used before the names of rivers.'
-            }, {
-                id: 5,
-                question: 'Convert to passive voice: "They are building a new bridge."',
-                options: [
-                    'A new bridge is being built by them.',
-                    'A new bridge was built by them.',
-                    'A new bridge is built by them.',
-                    'A new bridge has been built by them.'
-                ],
-                correct: 0,
-                explanation: 'Present continuous active → present continuous passive: "is/are being + past participle".'
-            }, {
-                id: 6,
-                question: 'Convert to indirect speech: He said, "I am reading a book."',
-                options: [
-                    'He said that he is reading a book.',
-                    'He said that he was reading a book.',
-                    'He said that I was reading a book.',
-                    'He said that he has been reading a book.'
-                ],
-                correct: 1,
-                explanation: 'Present continuous in direct speech changes to past continuous in indirect speech.'
-            }, {
-                id: 7,
-                question: 'Find the synonym of "Benevolent":',
-                options: ['Malevolent', 'Kind', 'Hostile', 'Greedy'],
-                correct: 1,
-                explanation: '"Benevolent" means well-meaning and kindly, synonym is "Kind".'
-            }, {
-                id: 8,
-                question: 'Find the antonym of "Eloquent":',
-                options: ['Fluent', 'Articulate', 'Inarticulate', 'Expressive'],
-                correct: 2,
-                explanation: '"Eloquent" means fluent and expressive; "Inarticulate" means unable to express clearly.'
-            }, {
-                id: 9,
-                question: 'One-word substitution: "A person who knows everything"',
-                options: ['Omnipotent', 'Omniscient', 'Omnipresent', 'Omnivorous'],
-                correct: 1,
-                explanation: '"Omniscient" means all-knowing. Omnipotent = all-powerful, Omnipresent = present everywhere.'
-            }, {
-                id: 10,
-                question: 'Meaning of the idiom: "To burn the midnight oil"',
-                options: [
-                    'To waste resources',
-                    'To work late into the night',
-                    'To set something on fire',
-                    'To be very angry'
-                ],
-                correct: 1,
-                explanation: '"Burn the midnight oil" means to work or study late into the night.'
-            }, {
-                id: 11,
-                question: 'Choose the correct phrasal verb: "She decided to _____ the job offer."',
-                options: ['turn down', 'turn up', 'turn on', 'turn off'],
-                correct: 0,
-                explanation: '"Turn down" means to reject or refuse an offer.'
-            }, {
-                id: 12,
-                question: 'Sentence improvement: "He is too tired that he cannot walk."',
-                options: [
-                    'so tired that',
-                    'very tired that',
-                    'much tired that',
-                    'No improvement'
-                ],
-                correct: 0,
-                explanation: 'The correct construction is "so...that", not "too...that".'
-            }, {
-                id: 13,
-                question: 'Fill in the blank: "I have been waiting for you _____ morning."',
-                options: ['for', 'since', 'from', 'by'],
-                correct: 1,
-                explanation: '"Since" is used with a point in time (morning), while "for" is used with duration.'
-            }, {
-                id: 14,
-                question: 'Spot the error: "Each of the students have submitted their assignment."',
-                options: ['Each of', 'have submitted', 'their', 'assignment'],
-                correct: 1,
-                explanation: '"Each" is singular, so the verb should be "has submitted".'
-            }, {
-                id: 15,
-                question: 'Choose the correct degree: "Mumbai is _____ than most other cities in India."',
-                options: ['more bigger', 'bigger', 'biggest', 'most big'],
-                correct: 1,
-                explanation: 'Comparative degree "bigger" is used with "than" for comparison between two entities.'
-            }, {
-                id: 16,
-                question: 'Conditional sentence: "If I _____ rich, I would travel the world."',
-                options: ['am', 'was', 'were', 'will be'],
-                correct: 2,
-                explanation: 'In unreal/hypothetical conditions (Type 2), "were" is used for all persons.'
-            }, {
-                id: 17,
-                question: 'Choose the correct determiner: "There is _____ milk left in the fridge."',
-                options: ['a little', 'a few', 'many', 'several'],
-                correct: 0,
-                explanation: '"A little" is used with uncountable nouns like "milk". "A few" is for countable nouns.'
-            }, {
-                id: 18,
-                question: 'Identify the correct modal: "You _____ obey the traffic rules."',
-                options: ['may', 'must', 'can', 'would'],
-                correct: 1,
-                explanation: '"Must" expresses obligation or necessity. Obeying traffic rules is mandatory.'
-            }, {
-                id: 19,
-                question: 'Choose the correct conjunction: "Wait here _____ I return."',
-                options: ['unless', 'until', 'because', 'although'],
-                correct: 1,
-                explanation: '"Until" indicates up to the point in time when something happens.'
-            }, {
-                id: 20,
-                question: 'Spot the error: "The committee have reached a unanimous decision."',
-                options: ['The committee', 'have reached', 'a unanimous', 'decision'],
-                correct: 1,
-                explanation: '"Committee" as a collective noun takes a singular verb when acting as one unit: "has reached".'
-            }, {
-                id: 21,
-                question: 'Meaning of the phrase: "To cry over spilt milk"',
-                options: [
-                    'To be emotional about dairy',
-                    'To complain about past losses',
-                    'To celebrate a victory',
-                    'To prepare for the future'
-                ],
-                correct: 1,
-                explanation: 'It means to waste time regretting something that has already happened and cannot be changed.'
-            }, {
-                id: 22,
-                question: 'Choose the correct preposition: "He is addicted _____ social media."',
-                options: ['with', 'to', 'for', 'at'],
-                correct: 1,
-                explanation: '"Addicted to" is the standard collocation.'
-            }, {
-                id: 23,
-                question: 'Convert to active voice: "The cake was eaten by the children."',
-                options: [
-                    'The children ate the cake.',
-                    'The children eat the cake.',
-                    'The children have eaten the cake.',
-                    'The cake the children ate.'
-                ],
-                correct: 0,
-                explanation: 'Past simple passive → past simple active: subject and object swap, verb form changes.'
-            }, {
-                id: 24,
-                question: 'Choose the correct word: "The news _____ not good today."',
-                options: ['is', 'are', 'were', 'have been'],
-                correct: 0,
-                explanation: '"News" is an uncountable noun and takes a singular verb "is".'
-            }, {
-                id: 25,
-                question: 'Rearrange the sentence: P: the examination / Q: he / R: with flying colours / S: passed',
-                options: ['Q-S-R-P', 'Q-P-S-R', 'S-R-Q-P', 'Q-S-P-R'],
-                correct: 0,
-                explanation: '"He passed the examination with flying colours" — Subject + Verb + Object + Adverbial phrase.'
-            }];
+    function formatTime(totalSec) {
+        const m = Math.floor(totalSec / 60), s = Math.floor(totalSec % 60);
+        return m > 0 ? `${m}m ${s}s` : `${s}s`;
+    }
 
-            // ==================== SCREEN NAVIGATION ====================
-            function showScreen(screenName) {
-                Object.values(screens).forEach(s => s.classList.remove('active'));
-                if (screens[screenName]) {
-                    screens[screenName].classList.add('active');
-                    // Re-trigger animation
-                    screens[screenName].style.animation = 'none';
-                    screens[screenName].offsetHeight;
-                    screens[screenName].style.animation = '';
-                }
-            }
+    function escapeHTML(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
 
-            // ==================== TOAST ====================
-            let toastTimeout;
+    function startQuiz() {
+        resetState();
+        els.playerBadge.textContent = `👤 ${playerName}`;
+        showScreen('quiz');
+        loadQuestion();
+    }
 
-            function showToast(message, duration = 2500) {
-                clearTimeout(toastTimeout);
-                els.toast.textContent = message;
-                els.toast.classList.add('show');
-                toastTimeout = setTimeout(() => {
-                    els.toast.classList.remove('show');
-                }, duration);
-            }
+    // =====================================================================
+    //  EVENT HANDLERS
+    // =====================================================================
 
-            // ==================== QUIZ LOGIC ====================
-            function resetState() {
-                state.currentIndex = 0;
-                state.score = 0;
-                state.answers = [];
-                state.timeLeft = TIME_PER_QUESTION;
-                state.timerInterval = null;
-                state.questionStartTime = 0;
-                state.quizFinished = false;
-                state.totalTimeTaken = 0;
-                state.isAnswerLocked = false;
-            }
+    els.btnStart.addEventListener('click', () => {
+        els.playerNameInput.value = localStorage.getItem('quizPlayerName') || '';
+        els.mobileInput.value = '';   // mobile is not pre-filled for privacy
+        els.nameError.textContent = '';
+        els.mobileError.textContent = '';
+        showScreen('name');
+        setTimeout(() => els.playerNameInput.focus(), 300);
+    });
 
-            function buildProgressDots() {
-                els.progressDots.innerHTML = '';
-                for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-                    const dot = document.createElement('span');
-                    dot.classList.add('progress-dot');
-                    if (i < state.answers.length) {
-                        dot.classList.add(state.answers[i].isCorrect ? 'done' : 'wrong-dot');
-                    } else if (i === state.currentIndex && !state.quizFinished) {
-                        dot.classList.add('current');
-                    }
-                    dot.title = `Q${i + 1}`;
-                    els.progressDots.appendChild(dot);
-                }
-            }
+    els.btnBackToStart.addEventListener('click', () => showScreen('start'));
 
-            function loadQuestion() {
-                if (state.currentIndex >= TOTAL_QUESTIONS) {
-                    finishQuiz();
-                    return;
-                }
-                state.isAnswerLocked = false;
-                state.timeLeft = TIME_PER_QUESTION;
-                state.questionStartTime = Date.now();
-                const q = questions[state.currentIndex];
+    els.btnBeginQuiz.addEventListener('click', beginQuiz);
+    els.playerNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') els.mobileInput.focus(); });
+    els.mobileInput.addEventListener('keydown', e => { if (e.key === 'Enter') beginQuiz(); });
 
-                els.questionCounter.textContent = `Q ${state.currentIndex + 1}/${TOTAL_QUESTIONS}`;
-                els.questionText.textContent = q.question;
-                els.optionsList.innerHTML = '';
+    function beginQuiz() {
+        // Name validation
+        const rawName = els.playerNameInput.value.trim();
+        if (!rawName) {
+            els.nameError.textContent = '⚠️ Please enter your name.';
+            els.playerNameInput.focus();
+            return;
+        }
+        if (rawName.length < 2) {
+            els.nameError.textContent = '⚠️ Name must be at least 2 characters.';
+            els.playerNameInput.focus();
+            return;
+        }
+        els.nameError.textContent = '';
 
-                const letters = ['A', 'B', 'C', 'D'];
-                q.options.forEach((opt, idx) => {
-                    const li = document.createElement('li');
-                    const btn = document.createElement('button');
-                    btn.classList.add('option-btn');
-                    btn.innerHTML = `
-                <span class="option-letter">${letters[idx]}</span>
-                <span>${opt}</span>
-              `;
-                    btn.addEventListener('click', () => handleOptionClick(idx, btn));
-                    btn.setAttribute('aria-label', `Option ${letters[idx]}: ${opt}`);
-                    li.appendChild(btn);
-                    els.optionsList.appendChild(li);
-                });
+        // Mobile validation
+        const rawMobile = els.mobileInput.value.trim();
+        if (!rawMobile) {
+            els.mobileError.textContent = '⚠️ Please enter your mobile number.';
+            els.mobileInput.focus();
+            return;
+        }
+        if (!/^\d{10}$/.test(rawMobile)) {
+            els.mobileError.textContent = '⚠️ Mobile number must be exactly 10 digits.';
+            els.mobileInput.focus();
+            return;
+        }
+        els.mobileError.textContent = '';
 
-                // Reset timer visuals
-                els.timerBar.classList.remove('warning', 'danger');
-                els.timerBar.style.width = '100%';
-                els.timerDisplay.classList.remove('warning', 'urgent');
-                els.timerText.textContent = `${TIME_PER_QUESTION}s`;
-                updateTimerDot(TIME_PER_QUESTION);
+        playerName   = rawName;
+        playerMobile = rawMobile;
+        localStorage.setItem('quizPlayerName', playerName);
+        startQuiz();
+    }
 
-                buildProgressDots();
-                startTimer();
-            }
+    els.btnReview.addEventListener('click', () => {
+        buildReview();
+        showScreen('review');
+    });
 
-            function updateTimerDot(secondsLeft) {
-                const dot = els.timerDisplay.querySelector('.timer-dot');
-                if (secondsLeft <= 5) {
-                    dot.style.background = '#ef4444';
-                } else if (secondsLeft <= 10) {
-                    dot.style.background = '#f59e0b';
-                } else {
-                    dot.style.background = '#10b981';
-                }
-            }
+    els.btnBackToResult.addEventListener('click', () => showScreen('result'));
 
-            function startTimer() {
-                clearInterval(state.timerInterval);
-                state.timeLeft = TIME_PER_QUESTION;
-                state.questionStartTime = Date.now();
-                els.timerBar.style.width = '100%';
-                els.timerBar.classList.remove('warning', 'danger');
-                els.timerDisplay.classList.remove('warning', 'urgent');
-                els.timerText.textContent = `${TIME_PER_QUESTION}s`;
-                updateTimerDot(TIME_PER_QUESTION);
+    els.btnRetry.addEventListener('click', () => {
+        showScreen('name');
+        els.playerNameInput.value = playerName;
+        els.mobileInput.value = playerMobile;   // keep mobile
+        els.nameError.textContent = '';
+        els.mobileError.textContent = '';
+    });
 
-                state.timerInterval = setInterval(() => {
-                    const elapsed = (Date.now() - state.questionStartTime) / 1000;
-                    const remaining = Math.max(0, TIME_PER_QUESTION - elapsed);
-                    state.timeLeft = remaining;
-                    const pct = (remaining / TIME_PER_QUESTION) * 100;
-                    els.timerBar.style.width = `${pct}%`;
-                    els.timerText.textContent = `${Math.ceil(remaining)}s`;
-                    updateTimerDot(Math.ceil(remaining));
+    els.btnRetryFromReview.addEventListener('click', () => {
+        showScreen('name');
+        els.playerNameInput.value = playerName;
+        els.mobileInput.value = playerMobile;
+        els.nameError.textContent = '';
+        els.mobileError.textContent = '';
+    });
 
-                    // Color transitions
-                    els.timerBar.classList.remove('warning', 'danger');
-                    els.timerDisplay.classList.remove('warning', 'urgent');
-                    if (remaining <= 5) {
-                        els.timerBar.classList.add('danger');
-                        els.timerDisplay.classList.add('urgent');
-                    } else if (remaining <= 10) {
-                        els.timerBar.classList.add('warning');
-                        els.timerDisplay.classList.add('warning');
-                    }
+    // =====================================================================
+    //  INIT
+    // =====================================================================
+    function init() {
+        showScreen('start');
+        els.resultRing.style.strokeDasharray  = CIRCUMFERENCE;
+        els.resultRing.style.strokeDashoffset = CIRCUMFERENCE;
+        els.resultScore.textContent = '0';
+        console.log('📝 SSC English Grammar Quiz – Mobile added, Leaderboard removed');
+    }
 
-                    if (remaining <= 0) {
-                        handleTimeout();
-                    }
-                }, 100);
-            }
-
-            function stopTimer() {
-                clearInterval(state.timerInterval);
-                state.timerInterval = null;
-            }
-
-            function handleTimeout() {
-                if (state.isAnswerLocked) return;
-                state.isAnswerLocked = true;
-                stopTimer();
-                const q = questions[state.currentIndex];
-                const allBtns = els.optionsList.querySelectorAll('.option-btn');
-
-                // Mark all disabled
-                allBtns.forEach(b => b.classList.add('disabled'));
-                // Reveal correct answer
-                allBtns[q.correct].classList.add('reveal-correct');
-
-                // Record as incorrect (unanswered)
-                state.answers.push({
-                    selectedIndex: -1,
-                    correctIndex: q.correct,
-                    isCorrect: false,
-                });
-                state.totalTimeTaken += TIME_PER_QUESTION;
-
-                buildProgressDots();
-                setTimeout(() => advanceQuestion(), 900);
-            }
-
-            function handleOptionClick(selectedIndex, clickedBtn) {
-                if (state.isAnswerLocked) return;
-                state.isAnswerLocked = true;
-                stopTimer();
-
-                const q = questions[state.currentIndex];
-                const isCorrect = selectedIndex === q.correct;
-                const allBtns = els.optionsList.querySelectorAll('.option-btn');
-                const elapsed = (Date.now() - state.questionStartTime) / 1000;
-                state.totalTimeTaken += Math.min(elapsed, TIME_PER_QUESTION);
-
-                // Disable all buttons
-                allBtns.forEach(b => b.classList.add('disabled'));
-
-                // Highlight correct answer
-                allBtns[q.correct].classList.add('correct');
-
-                // Highlight user's choice
-                if (isCorrect) {
-                    state.score++;
-                    clickedBtn.classList.add('correct');
-                } else {
-                    clickedBtn.classList.add('wrong');
-                    // Also subtly highlight the correct one more
-                    allBtns[q.correct].classList.add('reveal-correct');
-                }
-
-                state.answers.push({
-                    selectedIndex,
-                    correctIndex: q.correct,
-                    isCorrect,
-                });
-
-                buildProgressDots();
-                const delay = isCorrect ? 700 : 1000;
-                setTimeout(() => advanceQuestion(), delay);
-            }
-
-            function advanceQuestion() {
-                state.currentIndex++;
-                if (state.currentIndex >= TOTAL_QUESTIONS) {
-                    finishQuiz();
-                } else {
-                    loadQuestion();
-                }
-            }
-
-            function finishQuiz() {
-                stopTimer();
-                state.quizFinished = true;
-                buildProgressDots();
-                showResults();
-            }
-
-            // ==================== RESULTS ====================
-            function showResults() {
-                showScreen('result');
-                const percentage = Math.round((state.score / TOTAL_QUESTIONS) * 100);
-                const offset = CIRCUMFERENCE - (percentage / 100) * CIRCUMFERENCE;
-
-                // Animate the ring
-                els.resultRing.style.strokeDasharray = CIRCUMFERENCE;
-                els.resultRing.style.strokeDashoffset = CIRCUMFERENCE;
-                // Set color based on score
-                let ringColor = '#ef4444';
-                if (percentage >= 80) ringColor = '#10b981';
-                else if (percentage >= 60) ringColor = '#f59e0b';
-                else if (percentage >= 40) ringColor = '#f97316';
-                els.resultRing.style.stroke = ringColor;
-
-                // Trigger animation
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        els.resultRing.style.strokeDashoffset = offset;
-                    });
-                });
-
-                // Animate score count
-                animateCount(els.resultScore, 0, state.score, 1000);
-
-                // Emoji and message
-                let emoji, message;
-                if (percentage >= 90) {
-                    emoji = '🏆';
-                    message = 'Outstanding! You\'re a grammar master!';
-                } else if (percentage >= 75) {
-                    emoji = '🌟';
-                    message = 'Excellent work! Keep it up!';
-                } else if (percentage >= 60) {
-                    emoji = '👍';
-                    message = 'Good job! Room for improvement.';
-                } else if (percentage >= 40) {
-                    emoji = '📚';
-                    message = 'Fair attempt. More practice needed.';
-                } else {
-                    emoji = '💪';
-                    message = 'Keep learning! Practice makes perfect.';
-                }
-                els.resultEmoji.textContent = emoji;
-                els.resultMessage.textContent = message;
-                els.resultDetail.textContent =
-                    `You scored ${state.score} out of ${TOTAL_QUESTIONS} (${percentage}%) in ${formatTime(state.totalTimeTaken)}.`;
-                els.saveStatus.textContent = '';
-                els.nameInput.value = localStorage.getItem('quizPlayerName') || '';
-            }
-
-            function animateCount(element, start, end, duration) {
-                const startTime = performance.now();
-                function update(now) {
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-                    element.textContent = Math.round(start + (end - start) * eased);
-                    if (progress < 1) {
-                        requestAnimationFrame(update);
-                    } else {
-                        element.textContent = end;
-                    }
-                }
-                requestAnimationFrame(update);
-            }
-
-            function formatTime(totalSeconds) {
-                const mins = Math.floor(totalSeconds / 60);
-                const secs = Math.floor(totalSeconds % 60);
-                if (mins > 0) {
-                    return `${mins}m ${secs}s`;
-                }
-                return `${secs}s`;
-            }
-
-            // ==================== FIREBASE OPERATIONS ====================
-            function saveScoreToFirebase(playerName) {
-                if (!firebaseReady || !db) {
-                    els.saveStatus.textContent = '⚠️ Firebase not connected. Score saved locally.';
-                    els.saveStatus.className = 'save-status error';
-                    return Promise.reject(new Error('Firebase not connected'));
-                }
-                const percentage = Math.round((state.score / TOTAL_QUESTIONS) * 100);
-                const data = {
-                    name: playerName || 'Anonymous',
-                    score: state.score,
-                    total: TOTAL_QUESTIONS,
-                    percentage: percentage,
-                    timeTaken: Math.round(state.totalTimeTaken),
-                    timestamp: new Date().toISOString(),
-                };
-                return db.ref('quizResults').push(data);
-            }
-
-            function fetchLeaderboard() {
-                if (!firebaseReady || !db) {
-                    return Promise.resolve([]);
-                }
-                return db.ref('quizResults')
-                    .orderByChild('percentage')
-                    .limitToLast(50)
-                    .once('value')
-                    .then(snapshot => {
-                        const results = [];
-                        snapshot.forEach(child => {
-                            results.push({ id: child.key, ...child.val() });
-                        });
-                        // Sort descending by percentage, then by score
-                        results.sort((a, b) => {
-                            if (b.percentage !== a.percentage) return b.percentage - a.percentage;
-                            return b.score - a.score;
-                        });
-                        return results.slice(0, 20);
-                    });
-            }
-
-            // ==================== EVENT HANDLERS ====================
-            els.btnStart.addEventListener('click', () => {
-                resetState();
-                showScreen('quiz');
-                loadQuestion();
-            });
-
-            els.btnRetry.addEventListener('click', () => {
-                resetState();
-                showScreen('quiz');
-                loadQuestion();
-                els.saveStatus.textContent = '';
-                els.saveStatus.className = 'save-status';
-            });
-
-            els.btnViewLeaderboard.addEventListener('click', () => {
-                showScreen('leaderboard');
-                loadLeaderboard();
-            });
-
-            els.btnResultLeaderboard.addEventListener('click', () => {
-                showScreen('leaderboard');
-                loadLeaderboard();
-            });
-
-            els.btnBackFromLeaderboard.addEventListener('click', () => {
-                if (state.quizFinished) {
-                    showScreen('result');
-                } else {
-                    showScreen('start');
-                }
-            });
-
-            els.btnSaveScore.addEventListener('click', async () => {
-                if (!state.quizFinished) {
-                    showToast('Finish the quiz first!');
-                    return;
-                }
-                const playerName = els.nameInput.value.trim() || 'Anonymous';
-                localStorage.setItem('quizPlayerName', playerName);
-                els.btnSaveScore.disabled = true;
-                els.saveStatus.textContent = 'Saving...';
-                els.saveStatus.className = 'save-status';
-
-                try {
-                    await saveScoreToFirebase(playerName);
-                    els.saveStatus.textContent = '✅ Score saved successfully!';
-                    els.saveStatus.className = 'save-status success';
-                    showToast('Score saved! 🎉');
-                } catch (err) {
-                    console.error('Save error:', err);
-                    els.saveStatus.textContent =
-                        '⚠️ Could not save to Firebase. Check your connection or database rules.';
-                    els.saveStatus.className = 'save-status error';
-                    showToast('Save failed. Check connection.');
-                } finally {
-                    els.btnSaveScore.disabled = false;
-                }
-            });
-
-            function loadLeaderboard() {
-                els.leaderboardList.innerHTML = '';
-                els.leaderboardEmpty.style.display = 'none';
-                els.leaderboardSpinner.style.display = 'block';
-
-                fetchLeaderboard().then(results => {
-                    els.leaderboardSpinner.style.display = 'none';
-                    if (!results || results.length === 0) {
-                        els.leaderboardEmpty.style.display = 'block';
-                        return;
-                    }
-                    results.forEach((entry, index) => {
-                        const li = document.createElement('li');
-                        li.classList.add('leaderboard-item');
-                        const rank = index + 1;
-                        if (rank === 1) li.classList.add('top-1');
-                        if (rank === 2) li.classList.add('top-2');
-                        if (rank === 3) li.classList.add('top-3');
-
-                        let badgeClass = '';
-                        let rankIcon = rank;
-                        if (rank === 1) { badgeClass = 'gold';
-                            rankIcon = '🥇'; } else if (rank === 2) { badgeClass = 'silver';
-                            rankIcon = '🥈'; } else if (rank === 3) { badgeClass = 'bronze';
-                            rankIcon = '🥉'; }
-
-                        const dateStr = entry.timestamp ?
-                            new Date(entry.timestamp).toLocaleDateString('en-IN', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: '2-digit'
-                            }) :
-                            'N/A';
-
-                        li.innerHTML = `
-                  <span class="rank-badge ${badgeClass}">${rankIcon}</span>
-                  <div class="leaderboard-info">
-                    <span class="leaderboard-name">${escapeHTML(entry.name || 'Anonymous')}</span>
-                    <span class="leaderboard-date">${dateStr}</span>
-                  </div>
-                  <span class="leaderboard-score">${entry.score}/${entry.total} (${entry.percentage}%)</span>
-                `;
-                        els.leaderboardList.appendChild(li);
-                    });
-                }).catch(err => {
-                    console.error('Leaderboard fetch error:', err);
-                    els.leaderboardSpinner.style.display = 'none';
-                    els.leaderboardEmpty.style.display = 'block';
-                    els.leaderboardEmpty.textContent =
-                        '⚠️ Could not load leaderboard. Check Firebase connection.';
-                    showToast('Failed to load leaderboard');
-                });
-            }
-
-            function escapeHTML(str) {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            }
-
-            // ==================== INITIALIZATION ====================
-            function init() {
-                showScreen('start');
-                els.resultRing.style.strokeDasharray = CIRCUMFERENCE;
-                els.resultRing.style.strokeDashoffset = CIRCUMFERENCE;
-                els.resultScore.textContent = '0';
-                els.nameInput.value = localStorage.getItem('quizPlayerName') || '';
-                console.log('📝 SSC English Grammar Quiz App Ready');
-                console.log('🔥 Firebase Status:', firebaseReady ? 'Connected ✅' : 'Offline ⚠️');
-                console.log('📋 Total Questions:', TOTAL_QUESTIONS);
-                console.log('⏱️ Time per question:', TIME_PER_QUESTION + 's');
-                if (!firebaseReady) {
-                    console.log('💡 Tip: Quiz works offline. Enable Firebase for leaderboard & score saving.');
-                    console.log('💡 Ensure Firebase Realtime Database rules allow read/write.');
-                }
-            }
-
-            init();
-        })();
-    </script>
+    init();
+})();
+</script>
 </body>
 </html>
